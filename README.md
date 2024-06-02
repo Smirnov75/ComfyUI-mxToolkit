@@ -1,4 +1,4 @@
-# ComfyUI.mxToolkit
+# ComfyUI-mxToolkit
 
 A set of useful nodes for convenient use of ComfyUI, including: Seed randomization before the generation process starts, with saving of the last used values and the ability to automatically interrupt the current generation; A function to pause the generation process; Slider nodes for convenient control of input parameters; An alternative version of the standard Reroute node.
 
