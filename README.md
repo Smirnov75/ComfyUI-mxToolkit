@@ -5,6 +5,7 @@ A set of useful nodes for convenient use of ComfyUI, including: Seed randomizati
 ![](mxtoolkit.png)
 
 ----------
+Check the [Wiki](https://github.com/Smirnov75/comfyui.mxtoolkit/wiki) for an example of usage.
 
 Nodes are available in the `utils` section
 
