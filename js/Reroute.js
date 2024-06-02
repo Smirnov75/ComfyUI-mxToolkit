@@ -131,7 +131,6 @@ app.registerExtension({
 				}
 
 				this.onConnectionsChange = function (type, index, connected, link_info) {
-					if (!this.configured) return;
 					if (connected && type === LiteGraph.OUTPUT) {
 						const types = new Set(this.outputs[0].links.map((l) => app.graph.links[l].type).filter((t) => t !== "*"));
 						if (types.size > 1) {
