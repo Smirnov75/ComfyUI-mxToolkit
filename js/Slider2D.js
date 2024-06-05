@@ -1,4 +1,4 @@
-// ComfyUI.mxToolkit.Slider v.0.9 - Max Smirnov 2024
+// ComfyUI.mxToolkit.Slider v.0.9c - Max Smirnov 2024
 import { app } from "../../scripts/app.js";
 
 class MXSlider2D
@@ -12,6 +12,7 @@ class MXSlider2D
         const fontsize = LiteGraph.NODE_SUBTEXT_SIZE;
         const shX = (this.node.slot_start_y || 0)+fontsize*1.5;
         const shY = shX + LiteGraph.NODE_SLOT_HEIGHT;
+        const minSize = 60;
         const shiftLeft = 10;
         const shiftRight = 60;
 
@@ -89,7 +90,6 @@ class MXSlider2D
         {
             this.configured = true;
             if ( this.flags.collapsed ) return false;
-            if ( this.size[1] > this.size[0]-shiftRight+shiftLeft ) {this.size[1] = this.size[0]-shiftRight+shiftLeft} else {this.size[0] = this.size[1]+shiftRight-shiftLeft}
 
             let dgtX = parseInt(this.properties.decimalsX);
             let dgtY = parseInt(this.properties.decimalsY);
@@ -194,6 +194,8 @@ class MXSlider2D
             this.widgets[2].value = Math.floor(this.properties.valueY);
             this.widgets[3].value = this.properties.valueY;
         }
+
+        this.node.computeSize = () => [minSize + shiftRight - shiftLeft, minSize];
     }
 }
 
