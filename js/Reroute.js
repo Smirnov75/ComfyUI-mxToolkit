@@ -1,4 +1,4 @@
-// ComfyUI.mxToolkit.Reroute v.0.8 - Max Smirnov 2024
+// ComfyUI.mxToolkit.Reroute v.0.9 - Max Smirnov 2024
 import { app } from "../../scripts/app.js";
 import { mergeIfValid, getWidgetConfig, setWidgetConfig } from "../core/widgetInputs.js";
 
@@ -26,16 +26,37 @@ app.registerExtension({
 					this.ioOrientation();
 				}
 
-				this.onConfigure = function ()
-				{
-					this.configured = true;
-				}
-
 				this.onDrawBackground = function (ctx)
 				{
-					this.configured = true;
+					if (!this.configured) { this.configured = true; this.onConnectionsChange(); }
+					const canvas = app.graph.list_of_graphcanvas[0];
 					let linkColor = LGraphCanvas.link_type_colors[this.linkType];
 					if (linkColor === "") linkColor = LiteGraph.LINK_COLOR;
+
+					if (this.inputs && this.outputs) if (this.inputs[0].pos && this.outputs[0].pos)
+					{
+						this.inputs[0].color_on = "rgba(0,0,0,0)";
+						this.outputs[0].color_on = "rgba(0,0,0,0)";
+						this.outputs[0].shape = LiteGraph.ROUND_SHAPE;
+						if (this.outputs[0].links) if (this.outputs[0].links.length) if (this.outputs[0].links.length > 0) this.outputs[0].shape = LiteGraph.GRID_SHAPE;
+
+					    if (canvas) if (canvas.render_connections_border && canvas.ds.scale > 0.6)
+					    {
+							ctx.lineWidth = canvas.connections_width + 4;
+							ctx.strokeStyle = "rgba(0,0,0,0.5)";
+							ctx.beginPath();
+							ctx.moveTo(this.inputs[0].pos[0], this.inputs[0].pos[1]);
+							ctx.quadraticCurveTo(this.size[0]/2, this.size[1]/2, this.outputs[0].pos[0], this.outputs[0].pos[1]);
+							ctx.stroke();
+					    }
+
+ 						ctx.lineWidth = canvas.connections_width;
+ 						ctx.strokeStyle = linkColor;
+						ctx.beginPath();
+						ctx.moveTo(this.inputs[0].pos[0], this.inputs[0].pos[1]);
+						ctx.quadraticCurveTo(this.size[0]/2, this.size[1]/2, this.outputs[0].pos[0], this.outputs[0].pos[1]);
+						ctx.stroke();
+					}
 
 					if (this.mouseOver) if (this.inputs && this.outputs) if (this.inputs[0].pos && this.outputs[0].pos)
 					{
@@ -50,22 +71,6 @@ app.registerExtension({
             			ctx.arc(this.inputs[0].pos[0], this.inputs[0].pos[1], 5, 0, 2 * Math.PI, false);
             			ctx.arc(this.outputs[0].pos[0], this.outputs[0].pos[1], 5, 0, 2 * Math.PI, false);
             			ctx.fill();
-					}
-
-					if (this.inputs && this.outputs) if (this.inputs[0].pos && this.outputs[0].pos)
-					{
-
-						this.inputs[0].color_on = "rgba(0,0,0,0)";
-						this.outputs[0].color_on = "rgba(0,0,0,0)";
-						this.outputs[0].shape = LiteGraph.ROUND_SHAPE;
-						if (this.outputs[0].links) if (this.outputs[0].links.length) if (this.outputs[0].links.length > 0) this.outputs[0].shape = LiteGraph.GRID_SHAPE;
-
- 						ctx.lineWidth = 3;
- 						ctx.strokeStyle = linkColor;
-						ctx.beginPath();
-						ctx.moveTo(this.inputs[0].pos[0], this.inputs[0].pos[1]);
-						ctx.quadraticCurveTo(this.size[0]/2, this.size[1]/2, this.outputs[0].pos[0], this.outputs[0].pos[1]);
-						ctx.stroke();
 					}
 				}
 
@@ -131,7 +136,7 @@ app.registerExtension({
 				}
 
 				this.onConnectionsChange = function (type, index, connected, link_info) {
-					if (connected && type === LiteGraph.OUTPUT) {
+					if (this.configured && connected && type === LiteGraph.OUTPUT) {
 						const types = new Set(this.outputs[0].links.map((l) => app.graph.links[l].type).filter((t) => t !== "*"));
 						if (types.size > 1) {
 							const linksToDisconnect = [];
@@ -199,7 +204,7 @@ app.registerExtension({
 										node.inputs && node.inputs[link?.target_slot] && node.inputs[link.target_slot].type
 											? node.inputs[link.target_slot].type
 											: null;
-									if (inputType && inputType !== "*" && nodeOutType !== inputType) {
+									if (this.configured && inputType && inputType !== "*" && nodeOutType !== inputType) {
 										node.disconnectInput(link.target_slot);
 									} else {
 										outputType = nodeOutType;
