@@ -1,4 +1,4 @@
-// ComfyUI.mxToolkit.Stop v.0.9 - Max Smirnov 2024
+// ComfyUI.mxToolkit.Stop v.0.9c - Max Smirnov 2024
 import { app } from "../../scripts/app.js";
 
 class MXStop
@@ -8,8 +8,14 @@ class MXStop
         this.node = node;
         this.node.properties = this.node.properties || {};
 
+        this.node.onConfigure = function ()
+        {
+            this.configured = true;
+        }
+
         this.node.onConnectionsChange = function (type, index, connected, link_info)
         {
+            if (!this.configured) return;
             if (link_info)
             {
                 if (connected)
@@ -67,6 +73,7 @@ class MXStop
 
         this.node.onDrawForeground = function(ctx)
         {
+            this.configured = true;
             if (this.size[1] > LiteGraph.NODE_SLOT_HEIGHT*1.3) this.size[1] = LiteGraph.NODE_SLOT_HEIGHT*1.3;
             let titleHeight = LiteGraph.NODE_TITLE_HEIGHT;
             let cWidth = this._collapsed_width || LiteGraph.NODE_COLLAPSED_WIDTH;
