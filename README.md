@@ -19,13 +19,13 @@ Interrupts generation, passing input data to output. Generation can be resumed f
 
 ##### Slider (v0.9)
 
-Slider with a single output. If the `decimals` parameter value is zero, the output is an INT variable; otherwise, the output is a FLOAT variable. The `snap` parameter toggles snapping according to the set `step` parameter. Pressing the shift key while adjusting inverts the snap parameter value.
+Slider with a single output. If the `decimals` parameter value is zero, the output is an INT variable; otherwise, the output is a FLOAT variable. The `snap` parameter toggles snapping according to the set `step` parameter. Pressing the shift key while adjusting inverts the snap parameter value. Pressing the Ctrl key allows setting a value outside the defined range.
 
 ##### Slider2D (v0.9)
 
 Functions similarly to Slider but has 2 outputs. It also has additional parameters: `dots` - displays dots according to the snap parameter, `frame` - displays a frame, `framealert` - changes the frame color if the product of the output parameters exceeds the specified value (if 0 is specified in the parameter, the function is disabled).
 
-##### Reroute (v0.8)
+##### Reroute (v0.9)
 
 Alternative version of the Reroute node. Parameters indicate the input and output directions. Allowable values: LEFT, RIGHT, DOWN, UP, or TOP. Case does not matter. Shortened values can also be input: L, R, D, U, or T.
 
@@ -41,7 +41,7 @@ Alternative version of the Reroute node. Parameters indicate the input and outpu
 
 ##### Slider
 
-Слайдер с одним выходом. Если значение параметра `decimals` равно нулю, то на выходе переменная INT, иначе на выходе переменная FLOAT. Параметр `snap` включает и отключает привязку согласно установленному параметром `step` шагу. Нажатие клавиши shift при регулировке инвертирует значение параметра `snap`.
+Слайдер с одним выходом. Если значение параметра `decimals` равно нулю, то на выходе переменная INT, иначе на выходе переменная FLOAT. Параметр `snap` включает и отключает привязку согласно установленному параметром `step` шагу. Нажатие клавиши shift при регулировке инвертирует значение параметра `snap`. Нажатие клавиши Ctrl позволяет установить значение за пределами установленного диапазона.
 
 ##### Slider2D
 
