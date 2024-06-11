@@ -1,4 +1,4 @@
-// ComfyUI.mxToolkit.Slider v.0.9 - Max Smirnov 2024
+// ComfyUI.mxToolkit.Slider v.0.9c - Max Smirnov 2024
 import { app } from "../../scripts/app.js";
 
 class MXSlider
@@ -46,12 +46,10 @@ class MXSlider
             if (this.properties.step <= 0) this.properties.step = 1;
             if ( isNaN(this.properties.value) ) this.properties.value = this.properties.min;
             if ( this.properties.min >= this.properties.max ) this.properties.max = this.properties.min+this.properties.step;
-            if ( this.properties.value < this.properties.min ) this.properties.value = this.properties.min;
-            if ( this.properties.value > this.properties.max ) this.properties.value = this.properties.max;
             this.properties.decimals = Math.floor(this.properties.decimals);
             if (this.properties.decimals>4) this.properties.decimals = 4;
             if (this.properties.decimals<0) this.properties.decimals = 0;
-            this.intpos.x = (this.properties.value-this.properties.min)/(this.properties.max-this.properties.min);
+            this.intpos.x = clamp((this.properties.value-this.properties.min)/(this.properties.max-this.properties.min),0,1);
             if ((this.properties.decimals > 0 && this.outputs[0].type !== "FLOAT") || (this.properties.decimals === 0 && this.outputs[0].type !== "INT"))
                 if (this.outputs[0].links !== null)
                     for (let i = this.outputs[0].links.length; i > 0; i--)
@@ -102,6 +100,7 @@ class MXSlider
             if ( e.canvasY < this.pos[1]+shiftLeft-5 || e.canvasY > this.pos[1]+this.size[1]-shiftLeft+5 ) return false;
             if ( e.canvasY - this.pos[1] < 0 ) return false;
             this.capture = true;
+            this.unlock = false;
             this.captureInput(true);
             this.onMouseMove(e);
             return true;
@@ -114,15 +113,15 @@ class MXSlider
             let rn = Math.pow(10,this.properties.decimals);
             let vX = (e.canvasX - this.pos[0] - shiftLeft)/(this.size[0]-shiftRight-shiftLeft);
 
+            if (e.ctrlKey) this.unlock = true;
             if (e.shiftKey !== this.properties.snap)
             {
                 let step = this.properties.step/(this.properties.max - this.properties.min);
                 vX = Math.round(vX/step)*step;
             }
-            if ( vX < 0 ) { vX = 0 } else if ( vX > 1 ) { vX = 1 }
 
-            this.intpos.x = vX;
-            this.properties.value = Math.round(rn*(this.properties.min + (this.properties.max - this.properties.min) * this.intpos.x))/rn;
+            this.intpos.x = clamp(vX, 0, 1);
+            this.properties.value = Math.round(rn*(this.properties.min + (this.properties.max - this.properties.min) * ((this.unlock)?vX:this.intpos.x)))/rn;
 
             this.updateThisNodeGraph();
             if ( this.properties.value !== prevX ) this.graph.setisChangedFlag(this.id);
