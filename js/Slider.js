@@ -39,13 +39,15 @@ class MXSlider
             this.onPropertyChanged();
         }
 
-        this.node.onPropertyChanged = function ()
+        this.node.onPropertyChanged = function (propName)
         {
             if (!this.configured) return;
 
             if (this.properties.step <= 0) this.properties.step = 1;
             if ( isNaN(this.properties.value) ) this.properties.value = this.properties.min;
             if ( this.properties.min >= this.properties.max ) this.properties.max = this.properties.min+this.properties.step;
+            if ((propName === "min") && (this.properties.value < this.properties.min)) this.properties.value = this.properties.min;
+            if ((propName === "max") && (this.properties.value > this.properties.max)) this.properties.value = this.properties.max;
             this.properties.decimals = Math.floor(this.properties.decimals);
             if (this.properties.decimals>4) this.properties.decimals = 4;
             if (this.properties.decimals<0) this.properties.decimals = 0;
