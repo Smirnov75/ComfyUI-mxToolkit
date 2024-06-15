@@ -1,4 +1,4 @@
-// ComfyUI.mxToolkit.Reroute v.0.9 - Max Smirnov 2024
+// ComfyUI.mxToolkit.Reroute v.0.9c - Max Smirnov 2024
 import { app } from "../../scripts/app.js";
 import { mergeIfValid, getWidgetConfig, setWidgetConfig } from "../core/widgetInputs.js";
 
@@ -73,7 +73,28 @@ app.registerExtension({
             			ctx.fill();
 					}
 				}
+				
+				this.getExtraMenuOptions = function()
+				{
+					var that = this;
+					return [
+						{content:"🠖",	callback: function() { that.properties.inputDir = "LEFT";	that.properties.outputDir = "RIGHT";	that.onPropertyChanged(); }},
+						{content:"🠔",	callback: function() { that.properties.inputDir = "RIGHT";	that.properties.outputDir = "LEFT";	that.onPropertyChanged(); }},
+						{content:"🠕",	callback: function() { that.properties.inputDir = "DOWN";	that.properties.outputDir = "UP";	that.onPropertyChanged(); }},
+						{content:"🠗",	callback: function() { that.properties.inputDir = "UP";		that.properties.outputDir = "DOWN";	that.onPropertyChanged(); }},
 
+						{content:"⮥",	callback: function() { that.properties.inputDir = "LEFT";	that.properties.outputDir = "UP";	that.onPropertyChanged(); }},
+						{content:"⮧",	callback: function() { that.properties.inputDir = "LEFT";	that.properties.outputDir = "DOWN";	that.onPropertyChanged(); }},
+						{content:"⮤",	callback: function() { that.properties.inputDir = "RIGHT";	that.properties.outputDir = "UP";	that.onPropertyChanged(); }},
+						{content:"⮦",	callback: function() { that.properties.inputDir = "RIGHT";	that.properties.outputDir = "DOWN";	that.onPropertyChanged(); }},
+
+						{content:"⮡",	callback: function() { that.properties.inputDir = "UP";		that.properties.outputDir = "RIGHT";	that.onPropertyChanged(); }},
+						{content:"⮣",	callback: function() { that.properties.inputDir = "DOWN";	that.properties.outputDir = "RIGHT";	that.onPropertyChanged(); }},
+						{content:"⮢",	callback: function() { that.properties.inputDir = "DOWN";	that.properties.outputDir = "LEFT";	that.onPropertyChanged(); }},
+						{content:"⮠",	callback: function() { that.properties.inputDir = "UP";		that.properties.outputDir = "LEFT";	that.onPropertyChanged(); }},
+					];
+				}
+				
 				this.onPropertyChanged = function ()
 				{
 					const aValues = ["LEFT","RIGHT","UP","DOWN","TOP"];
