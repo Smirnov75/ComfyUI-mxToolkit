@@ -28,7 +28,7 @@ class MXSlider
         {
             this.outputs[0].name = "";
             this.widgets_start_y = -8;
-            this.intpos.x = (this.properties.value - this.properties.min) / (this.properties.max - this.properties.min);
+            this.intpos.x = clamp((this.properties.value-this.properties.min)/(this.properties.max-this.properties.min),0,1);
             this.outputs[0].type = (this.properties.decimals > 0)?"FLOAT":"INT";
             if (this.size) if (this.size.length) if (this.size[1] > LiteGraph.NODE_SLOT_HEIGHT*1.5) this.size[1] = LiteGraph.NODE_SLOT_HEIGHT*1.5;
         };
