@@ -27,7 +27,7 @@ Functions similarly to Slider but has 2 outputs. It also has additional paramete
 
 ##### Reroute (v0.9)
 
-Alternative version of the Reroute node. Parameters indicate the input and output directions. Allowable values: LEFT, RIGHT, DOWN, UP, or TOP. Case does not matter. Shortened values can also be input: L, R, D, U, or T.
+Alternative version of the Reroute node. Parameters indicate the input and output directions. Allowable values: LEFT, RIGHT, DOWN, UP, or TOP. Case does not matter. Shortened values can also be input: L, R, D, U, or T. You can also use the context menu to select a direction.
 
 ----------
 
@@ -49,7 +49,7 @@ Alternative version of the Reroute node. Parameters indicate the input and outpu
 
 ##### mxReroute
 
-Альтернативная версия стандартной ноды Reroute. В качестве параметров указывается направление входа и выхода. Допустимые значения: LEFT, RIGHT, DOWN, UP или TOP. Размер символов роли не играет. Можно вводить укороченные значения: L, R, D, U или T.
+Альтернативная версия стандартной ноды Reroute. В качестве параметров указывается направление входа и выхода. Допустимые значения: LEFT, RIGHT, DOWN, UP или TOP. Размер символов роли не играет. Можно вводить укороченные значения: L, R, D, U или T. Так же для выбора направления можно использовать контекстное меню.
 
 ----------
 
