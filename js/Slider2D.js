@@ -1,4 +1,4 @@
-// ComfyUI.mxToolkit.Slider v.0.9c - Max Smirnov 2024
+// ComfyUI.mxToolkit.Slider v.0.9d - Max Smirnov 2024
 import { app } from "../../scripts/app.js";
 
 class MXSlider2D
@@ -150,6 +150,20 @@ class MXSlider2D
 
         this.node.onMouseDown = function(e)
         {
+            if (e.canvasX < this.pos[0]+this.size[0]-15 && e.canvasX > this.pos[0]+this.size[0]-shiftRight+15 && e.canvasY < this.pos[1]+shY &&
+                this.properties.decimalsX === this.properties.decimalsY && this.properties.valueX <= this.properties.maxY && this.properties.valueX >= this.properties.minY &&
+                this.properties.valueY <= this.properties.maxX && this.properties.valueY >= this.properties.minX)
+                {
+                    let tmpX = this.properties.valueX;
+                    this.properties.valueX = this.properties.valueY;
+                    this.properties.valueY = tmpX;
+                    this.intpos.x = (this.properties.valueX-this.properties.minX)/(this.properties.maxX-this.properties.minX);
+                    this.intpos.y = (this.properties.valueY-this.properties.minY)/(this.properties.maxY-this.properties.minY);
+                    this.updateThisNodeGraph();
+                    this.graph.setisChangedFlag(this.id);
+                    return true;
+                }
+
             if ( e.canvasX < this.pos[0]+shiftLeft-5 || e.canvasX > this.pos[0]+this.size[0]-shiftRight+5 ) return false;
             if ( e.canvasY < this.pos[1]+shiftLeft-5 || e.canvasY > this.pos[1]+this.size[1]-shiftLeft+5 ) return false;
             if ( e.canvasY - this.pos[1] < 0 ) return false;
