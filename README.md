@@ -23,7 +23,7 @@ Slider with a single output. If the `decimals` parameter value is zero, the outp
 
 ##### Slider2D (v0.9)
 
-Functions similarly to Slider but has 2 outputs. It also has additional parameters: `dots` - displays dots according to the snap parameter, `frame` - displays a frame, `framealert` - changes the frame color if the product of the output parameters exceeds the specified value (if 0 is specified in the parameter, the function is disabled).
+Functions similarly to Slider but has 2 outputs. It also has additional parameters: `dots` - displays dots according to the snap parameter, `frame` - displays a frame, `framealert` - changes the frame color if the product of the output parameters exceeds the specified value (if 0 is specified in the parameter, the function is disabled). To swap X and Y, click on the area displaying these parameters (works only if other parameters do not prevent the swap).
 
 ##### Reroute (v0.9)
 
@@ -45,7 +45,7 @@ Alternative version of the Reroute node. Parameters indicate the input and outpu
 
 ##### Slider2D
 
-Работает аналогично Slider, но имеет 2 выхода. Также имеет дополнительные параметры: `dots` - отображение точек согласно параметру `snap`, `frame` - отображение рамки, `framealert` - изменяет цвет рамки, если произведение параметров выхода превышает заданное значение (если в параметре указан 0, то функция отключена).
+Работает аналогично Slider, но имеет 2 выхода. Также имеет дополнительные параметры: `dots` - отображение точек согласно параметру `snap`, `frame` - отображение рамки, `framealert` - изменяет цвет рамки, если произведение параметров выхода превышает заданное значение (если в параметре указан 0, то функция отключена). Чтобы поменять местами X и Y кликните на зону отображения этих параметров (работает только, если прочие параметры не препятствуют замене)
 
 ##### mxReroute
 
