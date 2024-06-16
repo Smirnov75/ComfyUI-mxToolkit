@@ -1,4 +1,4 @@
-// ComfyUI.mxToolkit.Reroute v.0.9c - Max Smirnov 2024
+// ComfyUI.mxToolkit.Reroute v.0.9d - Max Smirnov 2024
 import { app } from "../../scripts/app.js";
 import { mergeIfValid, getWidgetConfig, setWidgetConfig } from "../core/widgetInputs.js";
 
@@ -17,6 +17,7 @@ app.registerExtension({
 				this.properties.outputDir= "RIGHT";
 				this.linkType = "*";
 				this.bgcolor="rgba(20,20,200,0.0)";
+				this.keyCode = 0;
 
 				this.size = [2*LiteGraph.CANVAS_GRID_SIZE + 1.4*LiteGraph.NODE_SLOT_HEIGHT, 2*LiteGraph.CANVAS_GRID_SIZE + 1.4*LiteGraph.NODE_SLOT_HEIGHT];
 
@@ -73,7 +74,22 @@ app.registerExtension({
             			ctx.fill();
 					}
 				}
-				
+
+				this.onKeyUp = function(e)
+				{
+					if (e.keyCode < 37 || e.keyCode > 40) return;
+					if (this.keyCode > 0)
+					{
+    					const arrowKeys = { 37: "LEFT", 38: "UP", 39: "RIGHT", 40: "DOWN"};
+    					this.properties.inputDir  = arrowKeys[this.keyCode];
+    					this.properties.outputDir = arrowKeys[e.keyCode];
+    					this.onPropertyChanged();
+    					this.keyCode = 0;
+					} else this.keyCode = e.keyCode;
+				}
+
+				this.onDeselected = () => {this.keyCode = 0};
+
 				this.getExtraMenuOptions = function()
 				{
 					var that = this;
@@ -94,7 +110,7 @@ app.registerExtension({
 						{content:"⮠",	callback: function() { that.properties.inputDir = "UP";		that.properties.outputDir = "LEFT";	that.onPropertyChanged(); }},
 					];
 				}
-				
+
 				this.onPropertyChanged = function ()
 				{
 					const aValues = ["LEFT","RIGHT","UP","DOWN","TOP"];
