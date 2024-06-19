@@ -9,6 +9,6 @@ Repository = "https://github.com/Smirnov75/ComfyUI-mxToolkit"
 #  Used by Comfy Registry https://comfyregistry.org
 
 [tool.comfy]
-PublisherId = ""
+PublisherId = "smirnov"
 DisplayName = "ComfyUI-mxToolkit"
 Icon = ""
