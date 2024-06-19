@@ -1,4 +1,4 @@
-// ComfyUI.mxToolkit.Reroute v.0.9d - Max Smirnov 2024
+// ComfyUI.mxToolkit.Reroute v.0.9e - Max Smirnov 2024
 import { app } from "../../scripts/app.js";
 import { mergeIfValid, getWidgetConfig, setWidgetConfig } from "../core/widgetInputs.js";
 
@@ -36,6 +36,17 @@ app.registerExtension({
 
 					if (this.inputs && this.outputs) if (this.inputs[0].pos && this.outputs[0].pos)
 					{
+						const drawLink = (ctx) =>
+						{
+							ctx.beginPath();
+							ctx.moveTo(this.inputs[0].pos[0], this.inputs[0].pos[1]);
+							if (canvas.links_render_mode < 2)
+							{
+								ctx.lineTo(this.size[0]/2, this.size[1]/2);
+								ctx.lineTo(this.outputs[0].pos[0], this.outputs[0].pos[1]);
+							} else ctx.quadraticCurveTo(this.size[0]/2, this.size[1]/2, this.outputs[0].pos[0], this.outputs[0].pos[1]);
+							ctx.stroke();
+						}
 						this.inputs[0].color_on = "rgba(0,0,0,0)";
 						this.outputs[0].color_on = "rgba(0,0,0,0)";
 						this.outputs[0].shape = LiteGraph.ROUND_SHAPE;
@@ -45,18 +56,11 @@ app.registerExtension({
 					    {
 							ctx.lineWidth = canvas.connections_width + 4;
 							ctx.strokeStyle = "rgba(0,0,0,0.5)";
-							ctx.beginPath();
-							ctx.moveTo(this.inputs[0].pos[0], this.inputs[0].pos[1]);
-							ctx.quadraticCurveTo(this.size[0]/2, this.size[1]/2, this.outputs[0].pos[0], this.outputs[0].pos[1]);
-							ctx.stroke();
+							drawLink(ctx);
 					    }
-
  						ctx.lineWidth = canvas.connections_width;
  						ctx.strokeStyle = linkColor;
-						ctx.beginPath();
-						ctx.moveTo(this.inputs[0].pos[0], this.inputs[0].pos[1]);
-						ctx.quadraticCurveTo(this.size[0]/2, this.size[1]/2, this.outputs[0].pos[0], this.outputs[0].pos[1]);
-						ctx.stroke();
+ 						drawLink(ctx);
 					}
 
 					if (this.mouseOver) if (this.inputs && this.outputs) if (this.inputs[0].pos && this.outputs[0].pos)
@@ -92,24 +96,13 @@ app.registerExtension({
 
 				this.getExtraMenuOptions = function()
 				{
-					var that = this;
-					return [
-						{content:"🠖",	callback: function() { that.properties.inputDir = "LEFT";	that.properties.outputDir = "RIGHT";	that.onPropertyChanged(); }},
-						{content:"🠔",	callback: function() { that.properties.inputDir = "RIGHT";	that.properties.outputDir = "LEFT";	that.onPropertyChanged(); }},
-						{content:"🠕",	callback: function() { that.properties.inputDir = "DOWN";	that.properties.outputDir = "UP";	that.onPropertyChanged(); }},
-						{content:"🠗",	callback: function() { that.properties.inputDir = "UP";		that.properties.outputDir = "DOWN";	that.onPropertyChanged(); }},
-
-						{content:"⮥",	callback: function() { that.properties.inputDir = "LEFT";	that.properties.outputDir = "UP";	that.onPropertyChanged(); }},
-						{content:"⮧",	callback: function() { that.properties.inputDir = "LEFT";	that.properties.outputDir = "DOWN";	that.onPropertyChanged(); }},
-						{content:"⮤",	callback: function() { that.properties.inputDir = "RIGHT";	that.properties.outputDir = "UP";	that.onPropertyChanged(); }},
-						{content:"⮦",	callback: function() { that.properties.inputDir = "RIGHT";	that.properties.outputDir = "DOWN";	that.onPropertyChanged(); }},
-
-						{content:"⮡",	callback: function() { that.properties.inputDir = "UP";		that.properties.outputDir = "RIGHT";	that.onPropertyChanged(); }},
-						{content:"⮣",	callback: function() { that.properties.inputDir = "DOWN";	that.properties.outputDir = "RIGHT";	that.onPropertyChanged(); }},
-						{content:"⮢",	callback: function() { that.properties.inputDir = "DOWN";	that.properties.outputDir = "LEFT";	that.onPropertyChanged(); }},
-						{content:"⮠",	callback: function() { that.properties.inputDir = "UP";		that.properties.outputDir = "LEFT";	that.onPropertyChanged(); }},
-					];
-				}
+				    const that = this;
+				    const iDir = ["LEFT",  "RIGHT", "DOWN", "UP",   "LEFT", "LEFT", "RIGHT", "RIGHT", "UP",    "DOWN",  "DOWN", "UP"];
+				    const oDir = ["RIGHT", "LEFT",  "UP",   "DOWN", "UP",   "DOWN", "UP",    "DOWN",  "RIGHT", "RIGHT", "LEFT", "LEFT"];
+				    const key  = ["🠖",     "🠔",    "🠕",    "🠗",    "⮥",    "⮧",    "⮤",    "⮦",     "⮡",     "⮣",     "⮢",   "⮠"], options = [];
+				    for (let i = 0; i < 12; i++) options.push({ content: key[i], callback: () => { that.properties.inputDir = iDir[i]; that.properties.outputDir = oDir[i]; that.onPropertyChanged(); }});
+				    return options;
+				};
 
 				this.onPropertyChanged = function ()
 				{
