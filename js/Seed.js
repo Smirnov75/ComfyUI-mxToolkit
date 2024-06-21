@@ -1,4 +1,4 @@
-// ComfyUI.mxToolkit.Seed v.0.9 - Max Smirnov 2024
+// ComfyUI.mxToolkit.Seed v.0.9.0 - Max Smirnov 2024
 import { app } from "../../scripts/app.js";
 import { api } from "../../scripts/api.js";
 

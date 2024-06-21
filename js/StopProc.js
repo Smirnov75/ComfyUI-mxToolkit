@@ -1,4 +1,4 @@
-// ComfyUI.mxToolkit.Stop v.0.9c - Max Smirnov 2024
+// ComfyUI.mxToolkit.Stop v.0.9.2 - Max Smirnov 2024
 import { app } from "../../scripts/app.js";
 
 class MXStop
