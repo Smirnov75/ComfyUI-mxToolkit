@@ -1,4 +1,4 @@
-// ComfyUI.mxToolkit.Slider v.0.9c - Max Smirnov 2024
+// ComfyUI.mxToolkit.Slider v.0.9.2 - Max Smirnov 2024
 import { app } from "../../scripts/app.js";
 
 class MXSlider
@@ -51,6 +51,7 @@ class MXSlider
             this.properties.decimals = Math.floor(this.properties.decimals);
             if (this.properties.decimals>4) this.properties.decimals = 4;
             if (this.properties.decimals<0) this.properties.decimals = 0;
+            this.properties.value = Math.round(Math.pow(10,this.properties.decimals)*this.properties.value)/Math.pow(10,this.properties.decimals);
             this.intpos.x = clamp((this.properties.value-this.properties.min)/(this.properties.max-this.properties.min),0,1);
             if ((this.properties.decimals > 0 && this.outputs[0].type !== "FLOAT") || (this.properties.decimals === 0 && this.outputs[0].type !== "INT"))
                 if (this.outputs[0].links !== null)
@@ -60,7 +61,6 @@ class MXSlider
                         const tlink = app.graph.links[tlinkId];
                         app.graph.getNodeById(tlink.target_id).disconnectInput(tlink.target_slot);
                     }
-            this.properties.value = Math.round(Math.pow(10,this.properties.decimals)*this.properties.value)/Math.pow(10,this.properties.decimals);
             this.outputs[0].type = (this.properties.decimals > 0)?"FLOAT":"INT";
             this.widgets[2].value = (this.properties.decimals > 0)?1:0;
             this.widgets[1].value = this.properties.value;
@@ -96,11 +96,20 @@ class MXSlider
             ctx.fillText(this.properties.value.toFixed(dgt), this.size[0]-shiftRight+24, shX);
         }
 
+        this.node.onDblClick = function(e, pos, canvas)
+        {
+            if ( e.canvasX > this.pos[0]+this.size[0]-shiftRight+10 )
+            {
+                canvas.prompt("value", this.properties.value, function(v) {if (!isNaN(Number(v))) { this.properties.value = Number(v); this.onPropertyChanged("value");}}.bind(this), e);
+                return true;
+            }
+        }
+
         this.node.onMouseDown = function(e)
         {
+            if ( e.canvasY - this.pos[1] < 0 ) return false;
             if ( e.canvasX < this.pos[0]+shiftLeft-5 || e.canvasX > this.pos[0]+this.size[0]-shiftRight+5 ) return false;
             if ( e.canvasY < this.pos[1]+shiftLeft-5 || e.canvasY > this.pos[1]+this.size[1]-shiftLeft+5 ) return false;
-            if ( e.canvasY - this.pos[1] < 0 ) return false;
             this.capture = true;
             this.unlock = false;
             this.captureInput(true);
@@ -137,10 +146,7 @@ class MXSlider
             this.widgets[1].value = this.properties.value;
         }
 
-        this.node.computeSize = function()
-        {
-            return [LiteGraph.NODE_WIDTH,Math.floor(LiteGraph.NODE_SLOT_HEIGHT*1.5)];
-        }
+        this.node.computeSize = () => [LiteGraph.NODE_WIDTH,Math.floor(LiteGraph.NODE_SLOT_HEIGHT*1.5)];
     }
 }
 
