@@ -1,4 +1,4 @@
-// ComfyUI.mxToolkit.Slider v.0.9d - Max Smirnov 2024
+// ComfyUI.mxToolkit.Slider2D v.0.9.2 - Max Smirnov 2024
 import { app } from "../../scripts/app.js";
 
 class MXSlider2D
@@ -35,7 +35,7 @@ class MXSlider2D
             this.onPropertyChanged();
         }
 
-        this.node.onPropertyChanged = function ()
+        this.node.onPropertyChanged = function (propName)
         {
             if (!this.configured) return;
 
@@ -45,18 +45,20 @@ class MXSlider2D
             if ( isNaN(this.properties.valueY) ) this.properties.valueY = this.properties.minY;
             if ( this.properties.minX >= this.properties.maxX ) this.properties.maxX = this.properties.minX+1;
             if ( this.properties.minY >= this.properties.maxY ) this.properties.maxY = this.properties.minY+1;
-            if ( this.properties.valueX < this.properties.minX ) this.properties.valueX = this.properties.minX;
-            if ( this.properties.valueY < this.properties.minY ) this.properties.valueY = this.properties.minY;
-            if ( this.properties.valueX > this.properties.maxX ) this.properties.valueX = this.properties.maxX;
-            if ( this.properties.valueY > this.properties.maxY ) this.properties.valueY = this.properties.maxY;
+            if ((propName === "minX") && ( this.properties.valueX < this.properties.minX )) this.properties.valueX = this.properties.minX;
+            if ((propName === "minY") && ( this.properties.valueY < this.properties.minY )) this.properties.valueY = this.properties.minY;
+            if ((propName === "maxX") && ( this.properties.valueX > this.properties.maxX )) this.properties.valueX = this.properties.maxX;
+            if ((propName === "maxY") && ( this.properties.valueY > this.properties.maxY )) this.properties.valueY = this.properties.maxY;
             this.properties.decimalsX = Math.floor(this.properties.decimalsX);
             this.properties.decimalsY = Math.floor(this.properties.decimalsY);
             if (this.properties.decimalsX>4) this.properties.decimalsX = 4;
             if (this.properties.decimalsY>4) this.properties.decimalsY = 4;
             if (this.properties.decimalsX<0) this.properties.decimalsX = 0;
             if (this.properties.decimalsY<0) this.properties.decimalsY = 0;
-            this.intpos.x = (this.properties.valueX-this.properties.minX)/(this.properties.maxX-this.properties.minX);
-            this.intpos.y = (this.properties.valueY-this.properties.minY)/(this.properties.maxY-this.properties.minY);
+            this.properties.valueX = Math.round(Math.pow(10,this.properties.decimalsX)*this.properties.valueX)/Math.pow(10,this.properties.decimalsX);
+            this.properties.valueY = Math.round(Math.pow(10,this.properties.decimalsY)*this.properties.valueY)/Math.pow(10,this.properties.decimalsY);
+            this.intpos.x = clamp((this.properties.valueX-this.properties.minX)/(this.properties.maxX-this.properties.minX),0,1);
+            this.intpos.y = clamp((this.properties.valueY-this.properties.minY)/(this.properties.maxY-this.properties.minY),0,1);
 
             if ((this.properties.decimalsX > 0 && this.outputs[0].type !== "FLOAT") || (this.properties.decimalsX === 0 && this.outputs[0].type !== "INT"))
                 if (this.outputs[0].links !== null)
@@ -74,8 +76,7 @@ class MXSlider2D
                         const tlink = app.graph.links[tlinkId];
                         app.graph.getNodeById(tlink.target_id).disconnectInput(tlink.target_slot);
                     }
-            this.properties.valueX = Math.round(Math.pow(10,this.properties.decimalsX)*this.properties.valueX)/Math.pow(10,this.properties.decimalsX);
-            this.properties.valueY = Math.round(Math.pow(10,this.properties.decimalsY)*this.properties.valueY)/Math.pow(10,this.properties.decimalsY);
+
             this.outputs[0].type = (this.properties.decimalsX > 0)?"FLOAT":"INT";
             this.outputs[1].type = (this.properties.decimalsY > 0)?"FLOAT":"INT";
             this.widgets[5].value = (this.properties.decimalsY > 0)?1:0;
@@ -148,25 +149,50 @@ class MXSlider2D
             ctx.fillText(this.properties.valueY.toFixed(dgtY), this.size[0]-shiftRight+24, (shY));
         }
 
-        this.node.onMouseDown = function(e)
+        this.node.onDblClick = function(e, pos, canvas)
         {
-            if (e.canvasX < this.pos[0]+this.size[0]-15 && e.canvasX > this.pos[0]+this.size[0]-shiftRight+15 && e.canvasY < this.pos[1]+shY &&
-                this.properties.decimalsX === this.properties.decimalsY && this.properties.valueX <= this.properties.maxY && this.properties.valueX >= this.properties.minY &&
-                this.properties.valueY <= this.properties.maxX && this.properties.valueY >= this.properties.minX)
+            if ( e.canvasY - this.pos[1] < 0 ) return false;
+            if ( e.canvasX > this.pos[0]+this.size[0]-shiftRight+10 )
+            {
+                if (e.canvasY - this.pos[1] - 5 < shX)
                 {
-                    let tmpX = this.properties.valueX;
-                    this.properties.valueX = this.properties.valueY;
-                    this.properties.valueY = tmpX;
-                    this.intpos.x = (this.properties.valueX-this.properties.minX)/(this.properties.maxX-this.properties.minX);
-                    this.intpos.y = (this.properties.valueY-this.properties.minY)/(this.properties.maxY-this.properties.minY);
-                    this.updateThisNodeGraph();
-                    this.graph.setisChangedFlag(this.id);
+                    canvas.prompt("valueX", this.properties.valueX, function(v) {if (!isNaN(Number(v))) { this.properties.valueX = Number(v); this.onPropertyChanged("valueX");}}.bind(this), e);
                     return true;
                 }
+                else if (e.canvasY - this.pos[1] - 5 < shY)
+                {
+                    canvas.prompt("valueY", this.properties.valueY, function(v) {if (!isNaN(Number(v))) { this.properties.valueY = Number(v); this.onPropertyChanged("valueY");}}.bind(this), e);
+                    return true;
+                }
+            }
+        }
+
+        this.node.onMouseDown = function(e )
+        {
+            if (e.canvasY - this.pos[1] < 0) return false;
+            if (e.shiftKey &&
+                e.canvasX > this.pos[0]+this.size[0]-shiftRight+10 &&
+                e.canvasX < this.pos[0]+this.size[0]-15 &&
+                e.canvasX > this.pos[0]+this.size[0]-shiftRight+15 &&
+                e.canvasY < this.pos[1]+shY &&
+                this.properties.decimalsX === this.properties.decimalsY &&
+                this.properties.valueX <= this.properties.maxY &&
+                this.properties.valueX >= this.properties.minY &&
+                this.properties.valueY <= this.properties.maxX &&
+                this.properties.valueY >= this.properties.minX)
+            {
+                let tmpX = this.properties.valueX;
+                this.properties.valueX = this.properties.valueY;
+                this.properties.valueY = tmpX;
+                this.intpos.x = (this.properties.valueX-this.properties.minX)/(this.properties.maxX-this.properties.minX);
+                this.intpos.y = (this.properties.valueY-this.properties.minY)/(this.properties.maxY-this.properties.minY);
+                this.updateThisNodeGraph();
+                this.graph.setisChangedFlag(this.id);
+                return true;
+            }
 
             if ( e.canvasX < this.pos[0]+shiftLeft-5 || e.canvasX > this.pos[0]+this.size[0]-shiftRight+5 ) return false;
-            if ( e.canvasY < this.pos[1]+shiftLeft-5 || e.canvasY > this.pos[1]+this.size[1]-shiftLeft+5 ) return false;
-            if ( e.canvasY - this.pos[1] < 0 ) return false;
+            if ( e.canvasY < this.pos[1]+shiftLeft-5 || e.canvasY > this.pos[1]+this.size[1]-shiftLeft+5 )  return false;
             this.capture = true;
             this.captureInput(true);
             this.onMouseMove(e);
