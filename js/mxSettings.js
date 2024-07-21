@@ -82,35 +82,35 @@ function editContextOptions(enabled) {
 }
 
 const ext = {
-	name: id,
+    name: id,
     setup(app) {
-		if (localStorage.getItem(mxConfig_id) === null) {
-			localStorage.setItem(mxConfig_id, JSON.stringify(mxConfig_default));
-		}
-		mxConfig = JSON.parse(localStorage.getItem(mxConfig_id));
+        if (localStorage.getItem(mxConfig_id) === null) {
+            localStorage.setItem(mxConfig_id, JSON.stringify(mxConfig_default));
+        }
+        mxConfig = JSON.parse(localStorage.getItem(mxConfig_id));
         editSlotTypesDefault(mxConfig.enable_linkMenu)
         editContextOptions(mxConfig.enable_contextMenu)
 
-		app.ui.settings.addSetting({
-			id: id + "one",
-			name: "🧰 mxReroute",
+        app.ui.settings.addSetting({
+            id: id + "one",
+            name: "🧰 mxReroute",
             type: (name) => {
                 return $el("tr", [
                     $el("td", [
-						$el("label", {
-							textContent: name,
-						}),
-					]),
+                        $el("label", {
+                            textContent: name,
+                        }),
+                    ]),
                     
-					$el("td", [
+                    $el("td", [
                         $el(
                             "label",
-							{
-								textContent: "Enable in link menu ",
-								style: {
-								    display: "block",
-								},
-							},
+                            {
+                                textContent: "Enable in link menu ",
+                                style: {
+                                    display: "block",
+                                },
+                            },
                             [
                                 $el("input", {
                                     id: id + "linkMenu",
@@ -118,21 +118,21 @@ const ext = {
                                     checked: mxConfig.enable_linkMenu,
                                     onchange: (event) => {
                                         mxConfig.enable_linkMenu = event.target.checked;
-										localStorage.setItem(mxConfig_id, JSON.stringify(mxConfig));
+                                        localStorage.setItem(mxConfig_id, JSON.stringify(mxConfig));
                                         editSlotTypesDefault(mxConfig.enable_linkMenu);
-									},
+                                    },
                                 }),
                             ]
                         ),
 
                         $el(
                             "label",
-							{
-								textContent: "Enable in the context menu ",
-								style: {
-									display: "block",
-								},
-							},
+                            {
+                                textContent: "Enable in the context menu ",
+                                style: {
+                                    display: "block",
+                                },
+                            },
                             [
                                 $el("input", {
                                     id: id + "contextMenu",
@@ -140,18 +140,18 @@ const ext = {
                                     checked: mxConfig.enable_contextMenu,
                                     onchange: (event) => {
                                         mxConfig.enable_contextMenu = event.target.checked;
-										localStorage.setItem(mxConfig_id, JSON.stringify(mxConfig));
+                                        localStorage.setItem(mxConfig_id, JSON.stringify(mxConfig));
                                         editContextOptions(mxConfig.enable_contextMenu);
-									},
+                                    },
                                 }),
                             ]
                         ),
 
-					]),
-				]);
+                    ]),
+                ]);
             },
-		});
-	},
+        });
+    },
 };
 
 app.registerExtension(ext);
