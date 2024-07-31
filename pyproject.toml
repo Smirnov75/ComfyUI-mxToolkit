@@ -2,7 +2,7 @@
 name = "comfyui-mxtoolkit"
 description = "A set of useful nodes for convenient use of ComfyUI, including: Seed randomization before the generation process starts, with saving of the last used values and the ability to automatically interrupt the current generation; A function to pause the generation process; Slider nodes for convenient control of input parameters; An alternative version of the standard Reroute node."
 version = "0.9.2"
-license = "GPL-3.0"
+license = { text = "GNU General Public License v3.0" }
 
 [project.urls]
 Repository = "https://github.com/Smirnov75/ComfyUI-mxToolkit"
