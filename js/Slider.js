@@ -28,7 +28,7 @@ class MXSlider
         {
             this.outputs[0].name = "";
             this.widgets_start_y = -8;
-            this.intpos.x = clamp((this.properties.value-this.properties.min)/(this.properties.max-this.properties.min),0,1);
+            this.intpos.x = Math.max(0, Math.min(1, (this.properties.value-this.properties.min)/(this.properties.max-this.properties.min)));
             this.outputs[0].type = (this.properties.decimals > 0)?"FLOAT":"INT";
             if (this.size) if (this.size.length) if (this.size[1] > LiteGraph.NODE_SLOT_HEIGHT*1.5) this.size[1] = LiteGraph.NODE_SLOT_HEIGHT*1.5;
         };
@@ -52,7 +52,7 @@ class MXSlider
             if (this.properties.decimals>4) this.properties.decimals = 4;
             if (this.properties.decimals<0) this.properties.decimals = 0;
             this.properties.value = Math.round(Math.pow(10,this.properties.decimals)*this.properties.value)/Math.pow(10,this.properties.decimals);
-            this.intpos.x = clamp((this.properties.value-this.properties.min)/(this.properties.max-this.properties.min),0,1);
+            this.intpos.x = Math.max(0, Math.min(1, (this.properties.value-this.properties.min)/(this.properties.max-this.properties.min)));
             if ((this.properties.decimals > 0 && this.outputs[0].type !== "FLOAT") || (this.properties.decimals === 0 && this.outputs[0].type !== "INT"))
                 if (this.outputs[0].links !== null)
                     for (let i = this.outputs[0].links.length; i > 0; i--)
@@ -131,7 +131,7 @@ class MXSlider
                 vX = Math.round(vX/step)*step;
             }
 
-            this.intpos.x = clamp(vX, 0, 1);
+            this.intpos.x = Math.max(0, Math.min(1, vX));
             this.properties.value = Math.round(rn*(this.properties.min + (this.properties.max - this.properties.min) * ((this.unlock)?vX:this.intpos.x)))/rn;
 
             this.updateThisNodeGraph();
