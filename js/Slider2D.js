@@ -57,8 +57,8 @@ class MXSlider2D
             if (this.properties.decimalsY<0) this.properties.decimalsY = 0;
             this.properties.valueX = Math.round(Math.pow(10,this.properties.decimalsX)*this.properties.valueX)/Math.pow(10,this.properties.decimalsX);
             this.properties.valueY = Math.round(Math.pow(10,this.properties.decimalsY)*this.properties.valueY)/Math.pow(10,this.properties.decimalsY);
-            this.intpos.x = clamp((this.properties.valueX-this.properties.minX)/(this.properties.maxX-this.properties.minX),0,1);
-            this.intpos.y = clamp((this.properties.valueY-this.properties.minY)/(this.properties.maxY-this.properties.minY),0,1);
+            this.intpos.x = Math.max(0, Math.min(1, (this.properties.valueX-this.properties.minX)/(this.properties.maxX-this.properties.minX)));
+            this.intpos.y = Math.max(0, Math.min(1, (this.properties.valueY-this.properties.minY)/(this.properties.maxY-this.properties.minY)));
 
             if ((this.properties.decimalsX > 0 && this.outputs[0].type !== "FLOAT") || (this.properties.decimalsX === 0 && this.outputs[0].type !== "INT"))
                 if (this.outputs[0].links !== null)
