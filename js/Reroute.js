@@ -5,8 +5,9 @@ import { mergeIfValid, getWidgetConfig, setWidgetConfig } from "../core/widgetIn
 app.registerExtension({
 	name: "Comfy.MxRerouteNode",
 	registerCustomNodes(app) {
-		class MxRerouteNode {
-			constructor() {
+		class MxRerouteNode extends LGraphNode {
+			constructor(title = MxRerouteNode.title) {
+				super(title);
 				if (!this.properties) {
 					this.properties = {};
 				}
