@@ -1,4 +1,4 @@
-// ComfyUI.mxToolkit.Reroute v.0.9.2 - Max Smirnov 2024
+// ComfyUI.mxToolkit.Reroute v.0.9.4 - Max Smirnov 2024
 import { app } from "../../scripts/app.js";
 import { mergeIfValid, getWidgetConfig, setWidgetConfig } from "../core/widgetInputs.js";
 
@@ -195,7 +195,7 @@ app.registerExtension({
 							if (!link) return;
 							const node = app.graph.getNodeById(link.origin_id);
 							const type = node.constructor.type;
-							if (type.includes ("Reroute")) {
+							if (type && type.includes ("Reroute")) {
 								if (node === this) {
 									currentNode.disconnectInput(link.target_slot);
 									currentNode = null;
@@ -227,7 +227,7 @@ app.registerExtension({
 								const node = app.graph.getNodeById(link.target_id);
 								const type = node.constructor.type;
 
-								if (type.includes("Reroute")) {
+								if (type && type.includes("Reroute")) {
 									nodes.push(node);
 									updateNodes.push(node);
 								} else {
