@@ -1,4 +1,4 @@
-// ComfyUI.mxToolkit.Reroute v.0.9.4 - Max Smirnov 2024
+// ComfyUI.mxToolkit.Reroute v.0.9.5 - Max Smirnov 2024
 import { app } from "../../scripts/app.js";
 import { mergeIfValid, getWidgetConfig, setWidgetConfig } from "../core/widgetInputs.js";
 
