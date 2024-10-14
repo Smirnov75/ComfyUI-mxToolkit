@@ -17,7 +17,7 @@ app.registerExtension({
 				this.properties.inputDir = "LEFT";
 				this.properties.outputDir= "RIGHT";
 				this.linkType = "*";
-				this.bgcolor="rgba(20,20,200,0.0)";
+				this.bgcolor="#0000";
 				this.keyCode = 0;
 
 				this.size = [2*LiteGraph.CANVAS_GRID_SIZE + 1.4*LiteGraph.NODE_SLOT_HEIGHT, 2*LiteGraph.CANVAS_GRID_SIZE + 1.4*LiteGraph.NODE_SLOT_HEIGHT];
@@ -27,6 +27,11 @@ app.registerExtension({
 					this.resizable = false;
 					this.ioOrientation();
 				}
+
+				this.onConfigure = function ()
+        			{
+					this.bgcolor="#0000";
+        			}
 
 				this.onDrawBackground = function (ctx)
 				{
@@ -48,15 +53,15 @@ app.registerExtension({
 							} else ctx.quadraticCurveTo(this.size[0]/2, this.size[1]/2, this.outputs[0].pos[0], this.outputs[0].pos[1]);
 							ctx.stroke();
 						}
-						this.inputs[0].color_on = "rgba(0,0,0,0)";
-						this.outputs[0].color_on = "rgba(0,0,0,0)";
+						this.inputs[0].color_on = "#0000";
+						this.outputs[0].color_on = "#0000";
 						this.outputs[0].shape = LiteGraph.ROUND_SHAPE;
 						if (this.outputs[0].links) if (this.outputs[0].links.length) if (this.outputs[0].links.length > 0) this.outputs[0].shape = LiteGraph.GRID_SHAPE;
 
 					    if (canvas) if (canvas.render_connections_border && canvas.ds.scale > 0.6)
 					    {
 							ctx.lineWidth = canvas.connections_width + 4;
-							ctx.strokeStyle = "rgba(0,0,0,0.5)";
+							ctx.strokeStyle = "#0007";
 							drawLink(ctx);
 					    }
  						ctx.lineWidth = canvas.connections_width;
