@@ -1,4 +1,4 @@
-// ComfyUI.mxToolkit.Slider v.0.9.2 - Max Smirnov 2024
+// ComfyUI.mxToolkit.Slider v.0.9.6 - Max Smirnov 2024
 import { app } from "../../scripts/app.js";
 
 class MXSlider
@@ -29,11 +29,16 @@ class MXSlider
             this.outputs[0].name = "";
             this.widgets_start_y = -8;
             this.intpos.x = Math.max(0, Math.min(1, (this.properties.value-this.properties.min)/(this.properties.max-this.properties.min)));
-            this.outputs[0].type = (this.properties.decimals > 0)?"FLOAT":"INT";
             if (this.size) if (this.size.length) if (this.size[1] > LiteGraph.NODE_SLOT_HEIGHT*1.5) this.size[1] = LiteGraph.NODE_SLOT_HEIGHT*1.5;
+            this.outputs[0].type = (this.properties.decimals > 0)?"FLOAT":"INT";
         };
 
         this.node.onConfigure = function ()
+        {
+            this.outputs[0].type = (this.properties.decimals > 0)?"FLOAT":"INT";
+        }
+
+        this.node.onGraphConfigured = function ()
         {
             this.configured = true;
             this.onPropertyChanged();
@@ -42,7 +47,6 @@ class MXSlider
         this.node.onPropertyChanged = function (propName)
         {
             if (!this.configured) return;
-
             if (this.properties.step <= 0) this.properties.step = 1;
             if ( isNaN(this.properties.value) ) this.properties.value = this.properties.min;
             if ( this.properties.min >= this.properties.max ) this.properties.max = this.properties.min+this.properties.step;
