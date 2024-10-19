@@ -1,4 +1,4 @@
-// ComfyUI.mxToolkit.Slider2D v.0.9.2 - Max Smirnov 2024
+// ComfyUI.mxToolkit.Slider2D v.0.9.6 - Max Smirnov 2024
 import { app } from "../../scripts/app.js";
 
 class MXSlider2D
@@ -31,6 +31,12 @@ class MXSlider2D
 
         this.node.onConfigure = function ()
         {
+            this.outputs[0].type = (this.properties.decimalsX > 0)?"FLOAT":"INT";
+            this.outputs[1].type = (this.properties.decimalsY > 0)?"FLOAT":"INT";
+        }
+
+        this.node.onGraphConfigured = function ()
+        {
             this.configured = true;
             this.onPropertyChanged();
         }
@@ -38,7 +44,6 @@ class MXSlider2D
         this.node.onPropertyChanged = function (propName)
         {
             if (!this.configured) return;
-
             if (this.properties.stepX <= 0) this.properties.stepX = 1;
             if (this.properties.stepY <= 0) this.properties.stepY = 1;
             if ( isNaN(this.properties.valueX) ) this.properties.valueX = this.properties.minX;
