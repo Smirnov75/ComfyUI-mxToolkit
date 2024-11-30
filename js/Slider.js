@@ -1,4 +1,4 @@
-// ComfyUI.mxToolkit.Slider v.0.9.6 - Max Smirnov 2024
+// ComfyUI.mxToolkit.Slider v.0.9.7 - Max Smirnov 2024
 import { app } from "../../scripts/app.js";
 
 class MXSlider
@@ -22,7 +22,7 @@ class MXSlider
         const shiftLeft = 10;
         const shiftRight = 60;
 
-        for (let i=0; i<3; i++) this.node.widgets[i].type = "hidden";
+        for (let i=0; i<3; i++) this.node.widgets[i].hidden = true;
 
         this.node.onAdded = function ()
         {
@@ -114,16 +114,31 @@ class MXSlider
             if ( e.canvasY - this.pos[1] < 0 ) return false;
             if ( e.canvasX < this.pos[0]+shiftLeft-5 || e.canvasX > this.pos[0]+this.size[0]-shiftRight+5 ) return false;
             if ( e.canvasY < this.pos[1]+shiftLeft-5 || e.canvasY > this.pos[1]+this.size[1]-shiftLeft+5 ) return false;
+
             this.capture = true;
             this.unlock = false;
             this.captureInput(true);
-            this.onMouseMove(e);
+            this.valueUpdate(e);
             return true;
         }
 
         this.node.onMouseMove = function(e)
         {
             if (!this.capture) return;
+            this.valueUpdate(e);
+        }
+
+        this.node.onMouseUp = function(e)
+        {
+            if (!this.capture) return;
+            this.capture = false;
+            this.captureInput(false);
+            this.widgets[0].value = Math.floor(this.properties.value);
+            this.widgets[1].value = this.properties.value;
+        }
+
+        this.node.valueUpdate = function(e)
+        {
             let prevX = this.properties.value;
             let rn = Math.pow(10,this.properties.decimals);
             let vX = (e.canvasX - this.pos[0] - shiftLeft)/(this.size[0]-shiftRight-shiftLeft);
@@ -138,18 +153,11 @@ class MXSlider
             this.intpos.x = Math.max(0, Math.min(1, vX));
             this.properties.value = Math.round(rn*(this.properties.min + (this.properties.max - this.properties.min) * ((this.unlock)?vX:this.intpos.x)))/rn;
 
-            this.updateThisNodeGraph();
+            this.updateThisNodeGraph?.();
             if ( this.properties.value !== prevX ) this.graph.setisChangedFlag(this.id);
         }
 
-        this.node.onMouseUp = function()
-        {
-            this.capture = false;
-            this.captureInput(false);
-            this.widgets[0].value = Math.floor(this.properties.value);
-            this.widgets[1].value = this.properties.value;
-        }
-
+        this.node.onSelected = function(e) { this.onMouseUp(e) }
         this.node.computeSize = () => [LiteGraph.NODE_WIDTH,Math.floor(LiteGraph.NODE_SLOT_HEIGHT*1.5)];
     }
 }
