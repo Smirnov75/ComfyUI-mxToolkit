@@ -1,4 +1,4 @@
-// ComfyUI.mxToolkit.Stop v.0.9.6 - Max Smirnov 2024
+// ComfyUI.mxToolkit.Stop v.0.9.7 - Max Smirnov 2024
 import { app } from "../../scripts/app.js";
 
 class MXStop
@@ -55,17 +55,18 @@ class MXStop
             this.outputs[0].type = "*";
         };
 
-        this.node.onMouseDown = function(e)
+        this.node.onMouseDown = function(e, pos, canvas)
         {
             let cWidth = this._collapsed_width || LiteGraph.NODE_COLLAPSED_WIDTH;
             if ( e.canvasY-this.pos[1] > 0 ) return false;
             if (this.flags.collapsed && (e.canvasX-this.pos[0] < LiteGraph.NODE_TITLE_HEIGHT)) return false;
             if (!this.flags.collapsed && ((e.canvasX-this.pos[0]) < (this.size[0]-cWidth+LiteGraph.NODE_TITLE_HEIGHT))) return false;
-            this.updateThisNodeGraph();
+            this.updateThisNodeGraph?.();
+            this.onTmpMouseUp(e, pos, canvas);
             return true;
         }
 
-        this.node.onMouseUp = function()
+        this.node.onTmpMouseUp = function(e, pos, canvas)
         {
             app.queuePrompt(0);
         }
