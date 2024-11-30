@@ -1,4 +1,4 @@
-// ComfyUI.mxToolkit.Seed v.0.9.0 - Max Smirnov 2024
+// ComfyUI.mxToolkit.Seed v.0.9.7 - Max Smirnov 2024
 import { app } from "../../scripts/app.js";
 import { api } from "../../scripts/api.js";
 
@@ -8,7 +8,7 @@ class MXSeed {
         this.node = node;
         this.node.properties = { seed:0, min:0, max:4294967296, autorunQueue: true, interruptQueue: true };
         this.node.size = [210,LiteGraph.NODE_SLOT_HEIGHT*3.4];
-        this.node.widgets[0].type = "hidden";
+        this.node.widgets[0].hidden = true;
 
         this.seedWidget = this.node.widgets[0];
 
@@ -30,7 +30,7 @@ class MXSeed {
             this.configured = true;
         }
 
-        this.node.onMouseDown = function(e)
+        this.node.onMouseDown = function(e, pos, canvas)
         {
             let cWidth = this._collapsed_width || LiteGraph.NODE_COLLAPSED_WIDTH;
 
@@ -38,11 +38,12 @@ class MXSeed {
             if (!this.flags.collapsed && ( e.canvasY-this.pos[1] < 0 ) && ((e.canvasX-this.pos[0]) < (this.size[0]-cWidth+LiteGraph.NODE_TITLE_HEIGHT))) return false;
             if ((e.canvasX-this.pos[0]) < LiteGraph.NODE_TITLE_HEIGHT) return false;
 
-            this.updateThisNodeGraph();
+            this.updateThisNodeGraph?.();
+            this.onTmpMouseUp(e, pos, canvas);
             return true;
         }
 
-        this.node.onMouseUp = function(e, pos, canvas)
+        this.node.onTmpMouseUp = function(e, pos, canvas)
         {
             if (!this.flags.collapsed && ( e.canvasY-this.pos[1] > 0 ))
             {
