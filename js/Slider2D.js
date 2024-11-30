@@ -1,4 +1,4 @@
-// ComfyUI.mxToolkit.Slider2D v.0.9.6 - Max Smirnov 2024
+// ComfyUI.mxToolkit.Slider2D v.0.9.7 - Max Smirnov 2024
 import { app } from "../../scripts/app.js";
 
 class MXSlider2D
@@ -16,7 +16,7 @@ class MXSlider2D
         const shiftLeft = 10;
         const shiftRight = 60;
 
-        for (let i=0; i<6; i++) this.node.widgets[i].type = "hidden";
+        for (let i=0; i<6; i++) this.node.widgets[i].hidden = true;
 
         this.node.onAdded = function ()
         {
@@ -200,13 +200,18 @@ class MXSlider2D
             if ( e.canvasY < this.pos[1]+shiftLeft-5 || e.canvasY > this.pos[1]+this.size[1]-shiftLeft+5 )  return false;
             this.capture = true;
             this.captureInput(true);
-            this.onMouseMove(e);
+            this.valueUpdate(e);
             return true;
         }
 
         this.node.onMouseMove = function(e)
         {
             if (!this.capture) return;
+            this.valueUpdate(e);
+        }
+
+        this.node.valueUpdate = function(e)
+        {
             let prevX = this.properties.valueX;
             let prevY = this.properties.valueY;
             let rnX = Math.pow(10,this.properties.decimalsX);
@@ -226,12 +231,13 @@ class MXSlider2D
             this.intpos.y = vY;
             this.properties.valueX = Math.round(rnX*(this.properties.minX + (this.properties.maxX - this.properties.minX) * this.intpos.x))/rnX;
             this.properties.valueY = Math.round(rnY*(this.properties.minY + (this.properties.maxY - this.properties.minY) * this.intpos.y))/rnY;
-            this.updateThisNodeGraph();
+            this.updateThisNodeGraph?.();
             if ( this.properties.valueX !== prevX || this.properties.valueY !== prevY ) this.graph.setisChangedFlag(this.id);
         }
 
         this.node.onMouseUp = function()
         {
+            if (!this.capture) return;
             this.capture = false;
             this.captureInput(false);
             this.widgets[0].value = Math.floor(this.properties.valueX);
@@ -240,6 +246,7 @@ class MXSlider2D
             this.widgets[3].value = this.properties.valueY;
         }
 
+        this.node.onSelected = function(e) { this.onMouseUp(e) }
         this.node.computeSize = () => [minSize + shiftRight - shiftLeft, minSize];
     }
 }
