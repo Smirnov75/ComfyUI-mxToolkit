@@ -1,4 +1,4 @@
-// ComfyUI.mxToolkit.Slider2D v.0.9.7 - Max Smirnov 2024
+// ComfyUI.mxToolkit.Slider2D v.0.9.8 - Max Smirnov 2024
 import { app } from "../../scripts/app.js";
 
 class MXSlider2D
@@ -16,7 +16,7 @@ class MXSlider2D
         const shiftLeft = 10;
         const shiftRight = 60;
 
-        for (let i=0; i<6; i++) this.node.widgets[i].hidden = true;
+        for (let i=0; i<6; i++) { this.node.widgets[i].hidden = true; this.node.widgets[i].type = "hidden"; }
 
         this.node.onAdded = function ()
         {
