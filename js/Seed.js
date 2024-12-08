@@ -1,4 +1,4 @@
-// ComfyUI.mxToolkit.Seed v.0.9.7 - Max Smirnov 2024
+// ComfyUI.mxToolkit.Seed v.0.9.8 - Max Smirnov 2024
 import { app } from "../../scripts/app.js";
 import { api } from "../../scripts/api.js";
 
@@ -9,6 +9,7 @@ class MXSeed {
         this.node.properties = { seed:0, min:0, max:4294967296, autorunQueue: true, interruptQueue: true };
         this.node.size = [210,LiteGraph.NODE_SLOT_HEIGHT*3.4];
         this.node.widgets[0].hidden = true;
+        this.node.widgets[0].type = "hidden";
 
         this.seedWidget = this.node.widgets[0];
 
