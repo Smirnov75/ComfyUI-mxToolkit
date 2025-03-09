@@ -1,4 +1,4 @@
-// ComfyUI.mxToolkit.Seed v.0.9.8 - Max Smirnov 2024
+// ComfyUI.mxToolkit.Seed v.0.9.9 - Max Smirnov 2024
 import { app } from "../../scripts/app.js";
 import { api } from "../../scripts/api.js";
 
@@ -17,8 +17,8 @@ class MXSeed {
 
         this.node.onAdded = function ()
         {
-            this.outputs[0].name = "";
-            this.widgets_start_y = 62;
+            this.outputs[0].name = this.outputs[0].localized_name = "";
+            this.widgets_start_y = 0;
             this.resizable = false;
             this.lastprocessed = null;
             this.configured = false;
