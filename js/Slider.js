@@ -26,8 +26,8 @@ class MXSlider
 
         this.node.onAdded = function ()
         {
-            this.outputs[0].name = "";
-            this.widgets_start_y = -8;
+            this.outputs[0].name = this.outputs[0].localized_name = "";
+            this.widgets_start_y = -2.4*LiteGraph.NODE_SLOT_HEIGHT;
             this.intpos.x = Math.max(0, Math.min(1, (this.properties.value-this.properties.min)/(this.properties.max-this.properties.min)));
             if (this.size) if (this.size.length) if (this.size[1] > LiteGraph.NODE_SLOT_HEIGHT*1.5) this.size[1] = LiteGraph.NODE_SLOT_HEIGHT*1.5;
             this.outputs[0].type = (this.properties.decimals > 0)?"FLOAT":"INT";
@@ -122,9 +122,10 @@ class MXSlider
             return true;
         }
 
-        this.node.onMouseMove = function(e)
+        this.node.onMouseMove = function(e, pos, canvas)
         {
             if (!this.capture) return;
+            if ( canvas.pointer.isDown === false ) { this.onMouseUp(e); return; }
             this.valueUpdate(e);
         }
 
