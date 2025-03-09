@@ -1,4 +1,4 @@
-// ComfyUI.mxToolkit.Slider2D v.0.9.8 - Max Smirnov 2024
+// ComfyUI.mxToolkit.Slider2D v.0.9.9 - Max Smirnov 2024
 import { app } from "../../scripts/app.js";
 
 class MXSlider2D
@@ -20,8 +20,9 @@ class MXSlider2D
 
         this.node.onAdded = function ()
         {
-            this.outputs[0].name = "";
-            this.outputs[1].name = "";
+            this.outputs[0].name = this.outputs[0].localized_name = "";
+            this.outputs[1].name = this.outputs[1].localized_name = "";
+            this.widgets_start_y = -4.8*LiteGraph.NODE_SLOT_HEIGHT;
             this.intpos.x = (this.properties.valueX - this.properties.minX) / (this.properties.maxX - this.properties.minX);
             this.intpos.y = (this.properties.valueY - this.properties.minY) / (this.properties.maxY - this.properties.minY);
             if (this.size[1] > this.size[0]-shiftRight+shiftLeft) {this.size[1] = this.size[0]-shiftRight+shiftLeft} else {this.size[0] = this.size[1]+shiftRight-shiftLeft}
@@ -204,9 +205,10 @@ class MXSlider2D
             return true;
         }
 
-        this.node.onMouseMove = function(e)
+        this.node.onMouseMove = function(e, pos, canvas)
         {
             if (!this.capture) return;
+            if ( canvas.pointer.isDown === false ) { this.onMouseUp(e); return; }
             this.valueUpdate(e);
         }
 
