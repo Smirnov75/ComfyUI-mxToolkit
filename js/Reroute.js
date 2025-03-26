@@ -1,4 +1,4 @@
-// ComfyUI.mxToolkit.Reroute v.0.9.6 - Max Smirnov 2024
+// ComfyUI.mxToolkit.Reroute v.0.9.10 - Max Smirnov 2024
 import { app } from "../../scripts/app.js";
 import { mergeIfValid, getWidgetConfig, setWidgetConfig } from "../core/widgetInputs.js";
 
@@ -41,6 +41,7 @@ app.registerExtension({
 
                 this.onDrawBackground = function (ctx)
                 {
+                    this.ioOrientation();
                     const canvas = app.graph.list_of_graphcanvas[0];
                     let linkColor = LGraphCanvas.link_type_colors[this.linkType];
                     if (linkColor === "") linkColor = LiteGraph.LINK_COLOR;
@@ -55,7 +56,7 @@ app.registerExtension({
                             {
                                 ctx.lineTo(this.size[0]/2, this.size[1]/2);
                                 ctx.lineTo(this.outputs[0].pos[0], this.outputs[0].pos[1]);
-                            } else ctx.quadraticCurveTo(this.size[0]/2, this.size[1]/2, this.outputs[0].pos[0], this.outputs[0].pos[1]);
+                            } else ctx.quadraticCurveTo(this.size[0]/2, this.size[1]/2, this.outputs[0].pos[0]-this.pos[0], this.outputs[0].pos[1]-this.pos[1]);
                             ctx.stroke();
                         }
                         this.inputs[0].color_on = "#0000";
@@ -85,7 +86,7 @@ app.registerExtension({
                         ctx.fillStyle = linkColor;
                         ctx.beginPath();
                         ctx.arc(this.inputs[0].pos[0], this.inputs[0].pos[1], 5, 0, 2 * Math.PI, false);
-                        ctx.arc(this.outputs[0].pos[0], this.outputs[0].pos[1], 5, 0, 2 * Math.PI, false);
+                        ctx.arc(this.outputs[0].pos[0]-this.pos[0], this.outputs[0].pos[1]-this.pos[1], 5, 0, 2 * Math.PI, false);
                         ctx.fill();
                     }
                 }
@@ -158,19 +159,19 @@ app.registerExtension({
                     switch (o)
                     {
                         case "LEFT":
-                            this.outputs[0].pos = [0,0.7*LiteGraph.NODE_SLOT_HEIGHT+LiteGraph.CANVAS_GRID_SIZE];
+                            this.outputs[0].pos = [this.pos[0]+0,this.pos[1]+0.7*LiteGraph.NODE_SLOT_HEIGHT+LiteGraph.CANVAS_GRID_SIZE];
                             this.outputs[0].dir = LiteGraph.LEFT;
                             break;
                         case "RIGHT":
-                            this.outputs[0].pos = [this.size[0],0.7*LiteGraph.NODE_SLOT_HEIGHT+LiteGraph.CANVAS_GRID_SIZE];
+                            this.outputs[0].pos = [this.pos[0]+this.size[0],this.pos[1]+0.7*LiteGraph.NODE_SLOT_HEIGHT+LiteGraph.CANVAS_GRID_SIZE];
                             this.outputs[0].dir = LiteGraph.RIGHT;
                             break;
                         case "UP":
-                            this.outputs[0].pos = [this.size[0]/2,0];
+                            this.outputs[0].pos = [this.pos[0]+this.size[0]/2,this.pos[1]+0];
                             this.outputs[0].dir = LiteGraph.UP;
                             break;
                         case "DOWN":
-                            this.outputs[0].pos = [this.size[0]/2,this.size[1]];
+                            this.outputs[0].pos = [this.pos[0]+this.size[0]/2,this.pos[1]+this.size[1]];
                             this.outputs[0].dir = LiteGraph.DOWN;
                             break;
                     }
