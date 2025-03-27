@@ -1,4 +1,4 @@
-// ComfyUI.mxToolkit.Slider2D v.0.9.9 - Max Smirnov 2024
+// ComfyUI.mxToolkit.Slider2D v.0.9.11 - Max Smirnov 2024
 import { app } from "../../scripts/app.js";
 
 class MXSlider2D
@@ -173,7 +173,7 @@ class MXSlider2D
             }
         }
 
-        this.node.onMouseDown = function(e )
+        this.node.onMouseDown = function(e)
         {
             if (e.canvasY - this.pos[1] < 0) return false;
             if (e.shiftKey &&
@@ -192,6 +192,8 @@ class MXSlider2D
                 this.properties.valueY = tmpX;
                 this.intpos.x = (this.properties.valueX-this.properties.minX)/(this.properties.maxX-this.properties.minX);
                 this.intpos.y = (this.properties.valueY-this.properties.minY)/(this.properties.maxY-this.properties.minY);
+                this.onPropertyChanged("valueX");
+                this.onPropertyChanged("valueY");
                 this.updateThisNodeGraph();
                 this.graph.setisChangedFlag(this.id);
                 return true;
