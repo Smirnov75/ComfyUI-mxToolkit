@@ -1,4 +1,4 @@
-// ComfyUI.mxToolkit.Slider v.0.9.91 - Max Smirnov 2025
+// ComfyUI.mxToolkit.Slider v.0.9.92 - Max Smirnov 2025
 import { app } from "../../scripts/app.js";
 
 class MXSlider
