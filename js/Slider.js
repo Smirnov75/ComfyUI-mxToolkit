@@ -27,7 +27,7 @@ class MXSlider
         this.node.onAdded = function ()
         {
             this.outputs[0].name = this.outputs[0].localized_name = "";
-            this.widgets_start_y = -24*LiteGraph.NODE_SLOT_HEIGHT;
+            this.widgets_start_y = -2.4e8*LiteGraph.NODE_SLOT_HEIGHT;
             this.intpos.x = Math.max(0, Math.min(1, (this.properties.value-this.properties.min)/(this.properties.max-this.properties.min)));
             if (this.size) if (this.size.length) if (this.size[1] > LiteGraph.NODE_SLOT_HEIGHT*1.5) this.size[1] = LiteGraph.NODE_SLOT_HEIGHT*1.5;
             this.outputs[0].type = (this.properties.decimals > 0)?"FLOAT":"INT";
