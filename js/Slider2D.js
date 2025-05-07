@@ -1,4 +1,4 @@
-// ComfyUI.mxToolkit.Slider2D v.0.9.91 - Max Smirnov 2025
+// ComfyUI.mxToolkit.Slider2D v.0.9.92 - Max Smirnov 2025
 import { app } from "../../scripts/app.js";
 
 class MXSlider2D
@@ -22,7 +22,7 @@ class MXSlider2D
         {
             this.outputs[0].name = this.outputs[0].localized_name = "";
             this.outputs[1].name = this.outputs[1].localized_name = "";
-            this.widgets_start_y = -48*LiteGraph.NODE_SLOT_HEIGHT;
+            this.widgets_start_y = -4.8e8*LiteGraph.NODE_SLOT_HEIGHT;
             this.intpos.x = (this.properties.valueX - this.properties.minX) / (this.properties.maxX - this.properties.minX);
             this.intpos.y = (this.properties.valueY - this.properties.minY) / (this.properties.maxY - this.properties.minY);
             if (this.size[1] > this.size[0]-shiftRight+shiftLeft) {this.size[1] = this.size[0]-shiftRight+shiftLeft} else {this.size[0] = this.size[1]+shiftRight-shiftLeft}
