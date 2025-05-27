@@ -106,6 +106,53 @@ class MXSlider2D
             ctx.roundRect( shiftLeft-4, shiftLeft-4, this.size[0]-shiftRight-shiftLeft+8, this.size[1]-shiftLeft-shiftLeft+8,4);
             ctx.fill();
 
+            // Draw swap button
+            const swapButtonX = this.size[0] - 35;
+            const swapButtonY = this.size[1] - 30;
+            const swapButtonSize = 24;
+            
+            ctx.fillStyle = "rgba(100,100,100,0.8)";
+            ctx.beginPath();
+            ctx.roundRect(swapButtonX, swapButtonY, swapButtonSize, swapButtonSize, 2);
+            ctx.fill();
+            
+            ctx.strokeStyle = "rgba(200,200,200,0.9)";
+            ctx.lineWidth = 1;
+            ctx.stroke();
+            
+            // Draw swap icon (curved arrows only)
+            ctx.strokeStyle = "rgba(255,255,255,0.9)";
+            ctx.lineWidth = 2;
+            ctx.lineCap = "round";
+            
+            const centerX = swapButtonX + 12;
+            const centerY = swapButtonY + 12;
+            const radius = 7;
+            
+            // Top-right curved arrow
+            ctx.beginPath();
+            ctx.arc(centerX, centerY, radius, -Math.PI/2, 0, false);
+            ctx.stroke();
+            
+            // Arrow head for top-right arrow
+            ctx.beginPath();
+            ctx.moveTo(centerX + radius - 2, centerY + 3);
+            ctx.lineTo(centerX + radius + 1, centerY);
+            ctx.lineTo(centerX + radius - 2, centerY - 3);
+            ctx.stroke();
+            
+            // Bottom-left curved arrow
+            ctx.beginPath();
+            ctx.arc(centerX, centerY, radius, Math.PI/2, Math.PI, false);
+            ctx.stroke();
+            
+            // Arrow head for bottom-left arrow
+            ctx.beginPath();
+            ctx.moveTo(centerX - radius + 2, centerY - 3);
+            ctx.lineTo(centerX - radius - 1, centerY);
+            ctx.lineTo(centerX - radius + 2, centerY + 3);
+            ctx.stroke();
+
             // Dots
             if (this.properties.dots)
             {
@@ -173,9 +220,50 @@ class MXSlider2D
             }
         }
 
+        this.node.swapValues = function()
+        {
+            let tmpX = this.properties.valueX;
+            let tmpMinX = this.properties.minX;
+            let tmpMaxX = this.properties.maxX;
+            let tmpStepX = this.properties.stepX;
+            let tmpDecimalsX = this.properties.decimalsX;
+            
+            this.properties.valueX = this.properties.valueY;
+            this.properties.minX = this.properties.minY;
+            this.properties.maxX = this.properties.maxY;
+            this.properties.stepX = this.properties.stepY;
+            this.properties.decimalsX = this.properties.decimalsY;
+            
+            this.properties.valueY = tmpX;
+            this.properties.minY = tmpMinX;
+            this.properties.maxY = tmpMaxX;
+            this.properties.stepY = tmpStepX;
+            this.properties.decimalsY = tmpDecimalsX;
+            
+            this.intpos.x = (this.properties.valueX-this.properties.minX)/(this.properties.maxX-this.properties.minX);
+            this.intpos.y = (this.properties.valueY-this.properties.minY)/(this.properties.maxY-this.properties.minY);
+            this.onPropertyChanged("valueX");
+            this.onPropertyChanged("valueY");
+            this.updateThisNodeGraph();
+            this.graph.setisChangedFlag(this.id);
+        }
+
         this.node.onMouseDown = function(e)
         {
             if (e.canvasY - this.pos[1] < 0) return false;
+            
+            // Check for swap button click
+            const swapButtonX = this.pos[0] + this.size[0] - 35;
+            const swapButtonY = this.pos[1] + this.size[1] - 30;
+            const swapButtonSize = 24;
+            
+            if (e.canvasX >= swapButtonX && e.canvasX <= swapButtonX + swapButtonSize &&
+                e.canvasY >= swapButtonY && e.canvasY <= swapButtonY + swapButtonSize)
+            {
+                this.swapValues();
+                return true;
+            }
+            
             if (e.shiftKey &&
                 e.canvasX > this.pos[0]+this.size[0]-shiftRight+10 &&
                 e.canvasX < this.pos[0]+this.size[0]-15 &&
@@ -187,15 +275,7 @@ class MXSlider2D
                 this.properties.valueY <= this.properties.maxX &&
                 this.properties.valueY >= this.properties.minX)
             {
-                let tmpX = this.properties.valueX;
-                this.properties.valueX = this.properties.valueY;
-                this.properties.valueY = tmpX;
-                this.intpos.x = (this.properties.valueX-this.properties.minX)/(this.properties.maxX-this.properties.minX);
-                this.intpos.y = (this.properties.valueY-this.properties.minY)/(this.properties.maxY-this.properties.minY);
-                this.onPropertyChanged("valueX");
-                this.onPropertyChanged("valueY");
-                this.updateThisNodeGraph();
-                this.graph.setisChangedFlag(this.id);
+                this.swapValues();
                 return true;
             }
 
